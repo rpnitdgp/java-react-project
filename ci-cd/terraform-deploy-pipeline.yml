@@ -8,7 +8,7 @@ pool:
 
 variables:
   # Optional: Define default values for your variables
-  terraformWorkingDirectory: '$(System.DefaultWorkingDirectory)/infrastructure' # Adjust path as needed
+  terraformWorkingDirectory: '$(System.DefaultWorkingDirectory)/../infrastructure' # Adjust path as needed
 
 steps:
 - script: |
