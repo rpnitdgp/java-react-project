@@ -1,0 +1,21 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: Git@v2
+    inputs:
+      repository: 'frontend-repo-url'
+      branch: 'main'
+
+  - task: Docker@2
+    inputs:
+      containerRegistry: 'frontendACR'
+      repository: 'frontend-app'
+      command: 'buildAndPush'
+      Dockerfile: 'docker/frontend.Dockerfile'
+      tags: '$(Build.BuildId)'

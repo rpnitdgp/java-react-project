@@ -1,0 +1,34 @@
+trigger:
+  branches:
+    include:
+      - main  # or your default branch
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  # Optional: Define default values for your variables
+  terraformWorkingDirectory: '$(System.DefaultWorkingDirectory)/infrastructure' # Adjust path as needed
+
+steps:
+- script: |
+    echo "##vso[task.setvariable variable=ARM_CLIENT_ID;isOutput=true]$(servicePrincipalId)"
+    echo "##vso[task.setvariable variable=ARM_CLIENT_SECRET;isOutput=true]$(servicePrincipalKey)"
+    echo "##vso[task.setvariable variable=ARM_SUBSCRIPTION_ID;isOutput=true]$(subscriptionId)"
+    echo "##vso[task.setvariable variable=ARM_TENANT_ID;isOutput=true]$(tenantId)"
+  displayName: 'Set Terraform Environment Variables'
+
+- task: Bash@3
+  inputs:
+    targetType: 'inline'
+    script: |
+      echo "Initializing Terraform..."
+      cd $(terraformWorkingDirectory)
+      terraform init
+      
+      echo "Planning Terraform..."
+      terraform plan
+
+      echo "Applying Terraform..."
+      terraform apply -auto-approve
+  displayName: 'Run Terraform'

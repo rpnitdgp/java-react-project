@@ -1,0 +1,19 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: Git@v2
+    inputs:
+      repository: 'frontend-repo-url'
+      branch: 'main'
+
+  - task: AzureWebAppContainer@1
+    inputs:
+      azureSubscription: 'your-azure-service-connection'
+      appName: 'frontend-app-service'
+      imageName: 'frontend-app:$(Build.BuildId)'
